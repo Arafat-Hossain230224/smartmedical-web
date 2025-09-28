@@ -2,18 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Medical Help</title>
 </head>
 <body>
 <h2>Smart Medical Help Form</h2>
 
-<label for="location">Location:</label>
-<input type="text" id="location" placeholder="Enter your location"><br><br>
-
-<label for="problem">Problem:</label>
-<input type="text" id="problem" placeholder="Enter problem"><br><br>
-
+<label>Location:</label>
+<input type="text" id="location"><br><br>
+<label>Problem:</label>
+<input type="text" id="problem"><br><br>
 <button id="sendBtn">Send Help Request</button>
 
 <h3>Status: <span id="status">Disconnected</span></h3>
@@ -24,48 +21,45 @@
 const statusEl = document.getElementById('status');
 const responseEl = document.getElementById('response');
 
-// HiveMQ WSS broker
-const broker = 'wss://broker.hivemq.com:8000/mqtt';
+// HiveMQ Cloud WSS URL
+const broker = 'wss://5d50781512bf470b8b7f638f0c140138.s1.eu.hivemq.cloud:8884/mqtt';
 const options = {
-  clientId: 'WebClient_' + Math.random().toString(16).substr(2, 8),
-  keepalive: 60,
-  clean: true,
-  reconnectPeriod: 1000
+  clientId: 'WebClient_' + Math.random().toString(16).substr(2,8),
+  keepalive:60,
+  clean:true,
+  reconnectPeriod:1000
 };
 
-const client = mqtt.connect(broker, options);
+const client = mqtt.connect(broker,options);
 
-client.on('connect', () => {
-  statusEl.textContent = 'Connected';
-  console.log('Connected to MQTT broker');
-  client.subscribe('smartmedical/response', (err) => {
-    if(!err) console.log('Subscribed to smartmedical/response');
-  });
+client.on('connect',()=>{
+  statusEl.textContent='Connected';
+  console.log('Connected to broker');
+  client.subscribe('smartmedical/response');
 });
 
-client.on('message', (topic, message) => {
-  if(topic === 'smartmedical/response') {
-    responseEl.textContent = message.toString();
+client.on('message',(topic,message)=>{
+  if(topic==='smartmedical/response'){
+    responseEl.textContent=message.toString();
   }
 });
 
-client.on('error', (err) => {
-  statusEl.textContent = 'Error';
-  console.error('Connection error:', err);
+client.on('error',(err)=>{
+  statusEl.textContent='Error';
+  console.error(err);
 });
 
-document.getElementById('sendBtn').addEventListener('click', () => {
-  const location = document.getElementById('location').value.trim();
-  const problem = document.getElementById('problem').value.trim();
+document.getElementById('sendBtn').addEventListener('click',()=>{
+  const location=document.getElementById('location').value.trim();
+  const problem=document.getElementById('problem').value.trim();
   if(location && problem){
-    const payload = `HELP:${location}:${problem}`;
-    client.publish('smartmedical/help', payload);
+    const payload=`HELP:${location}:${problem}`;
+    client.publish('smartmedical/help',payload);
     alert('Help request sent!');
-  } else {
-    alert('Please fill in both location and problem.');
+  }else{
+    alert('Fill both fields!');
   }
 });
 </script>
 </body>
 </html>
-
