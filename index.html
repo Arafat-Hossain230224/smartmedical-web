@@ -21,54 +21,51 @@
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 <script>
-  const statusEl = document.getElementById('status');
-  const responseEl = document.getElementById('response');
+const statusEl = document.getElementById('status');
+const responseEl = document.getElementById('response');
 
-  // MQTT Broker
-  const broker = 'wss://test.mosquitto.org:8081/mqtt';
-  const options = {
-    clientId: 'WebClient_' + Math.random().toString(16).substr(2, 8),
-    keepalive: 60,
-    clean: true
-  };
+// HiveMQ WSS broker
+const broker = 'wss://broker.hivemq.com:8000/mqtt';
+const options = {
+  clientId: 'WebClient_' + Math.random().toString(16).substr(2, 8),
+  keepalive: 60,
+  clean: true,
+  reconnectPeriod: 1000
+};
 
-  // Connect to MQTT broker
-  const client = mqtt.connect(broker, options);
+const client = mqtt.connect(broker, options);
 
-  client.on('connect', () => {
-    statusEl.textContent = 'Connected';
-    console.log('Connected to MQTT broker');
-
-    // Subscribe to ESP32 response topic
-    client.subscribe('smartmedical/response', (err) => {
-      if (!err) console.log('Subscribed to smartmedical/response');
-    });
+client.on('connect', () => {
+  statusEl.textContent = 'Connected';
+  console.log('Connected to MQTT broker');
+  client.subscribe('smartmedical/response', (err) => {
+    if(!err) console.log('Subscribed to smartmedical/response');
   });
+});
 
-  client.on('message', (topic, message) => {
-    if(topic === 'smartmedical/response') {
-      responseEl.textContent = message.toString();
-    }
-  });
+client.on('message', (topic, message) => {
+  if(topic === 'smartmedical/response') {
+    responseEl.textContent = message.toString();
+  }
+});
 
-  client.on('error', (err) => {
-    statusEl.textContent = 'Error';
-    console.error('Connection error: ', err);
-  });
+client.on('error', (err) => {
+  statusEl.textContent = 'Error';
+  console.error('Connection error:', err);
+});
 
-  // Send help request
-  document.getElementById('sendBtn').addEventListener('click', () => {
-    const location = document.getElementById('location').value.trim();
-    const problem = document.getElementById('problem').value.trim();
-
-    if(location && problem) {
-      const payload = `HELP:${location}:${problem}`;
-      client.publish('smartmedical/help', payload);
-      alert('Help request sent!');
-    } else {
-      alert('Please fill in both location and problem.');
-    }
-  });
+document.getElementById('sendBtn').addEventListener('click', () => {
+  const location = document.getElementById('location').value.trim();
+  const problem = document.getElementById('problem').value.trim();
+  if(location && problem){
+    const payload = `HELP:${location}:${problem}`;
+    client.publish('smartmedical/help', payload);
+    alert('Help request sent!');
+  } else {
+    alert('Please fill in both location and problem.');
+  }
+});
 </script>
 </body>
 </html>
+
