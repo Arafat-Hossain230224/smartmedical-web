@@ -25,7 +25,7 @@
   const responseEl = document.getElementById('response');
 
   // MQTT Broker
-  const broker = 'wss://broker.hivemq.com:8000/mqtt';
+  const broker = 'wss://test.mosquitto.org:8081/mqtt';
   const options = {
     clientId: 'WebClient_' + Math.random().toString(16).substr(2, 8),
     keepalive: 60,
