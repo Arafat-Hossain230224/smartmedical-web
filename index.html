@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Medical Help</title>
 </head>
 <body>
@@ -21,16 +22,17 @@
 const statusEl = document.getElementById('status');
 const responseEl = document.getElementById('response');
 
-// HiveMQ Cloud WSS URL
 const broker = 'wss://5d50781512bf470b8b7f638f0c140138.s1.eu.hivemq.cloud:8884/mqtt';
 const options = {
   clientId: 'WebClient_' + Math.random().toString(16).substr(2,8),
+  username: 'hivemq.webclient.1759059787763',
+  password: 'De0y4!TzE7t#Z<5Wo>Hq',
   keepalive:60,
   clean:true,
   reconnectPeriod:1000
 };
 
-const client = mqtt.connect(broker,options);
+const client = mqtt.connect(broker, options);
 
 client.on('connect',()=>{
   statusEl.textContent='Connected';
