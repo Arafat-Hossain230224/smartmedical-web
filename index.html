@@ -10,8 +10,13 @@
 
 <label>Location:</label>
 <input type="text" id="location"><br><br>
+
 <label>Problem:</label>
 <input type="text" id="problem"><br><br>
+
+<label>Phone Number:</label>
+<input type="text" id="phone"><br><br>
+
 <button id="sendBtn">Send Help Request</button>
 
 <h3>Status: <span id="status">Disconnected</span></h3>
@@ -54,12 +59,14 @@ client.on('error',(err)=>{
 document.getElementById('sendBtn').addEventListener('click',()=>{
   const location=document.getElementById('location').value.trim();
   const problem=document.getElementById('problem').value.trim();
-  if(location && problem){
-    const payload=`HELP:${location}:${problem}`;
+  const phone=document.getElementById('phone').value.trim();
+
+  if(location && problem && phone){
+    const payload=`HELP:${location}:${problem}:${phone}`;
     client.publish('smartmedical/help',payload);
     alert('Help request sent!');
   }else{
-    alert('Fill both fields!');
+    alert('Fill all fields!');
   }
 });
 </script>
