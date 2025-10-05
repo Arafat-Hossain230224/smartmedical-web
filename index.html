@@ -67,7 +67,7 @@ document.getElementById('sendBtn').addEventListener('click',()=>{
     alert('Help request sent!');
 
     // Also send to Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbwFNR4I_SG5mjJDs8vyOaXCnVHe5eDT-epY0oNvGHN66b0I59t9fwLweTYiu9JNIebGxA/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbwRkTpp7jEPxdLQ0X6pmaSrZubu2bKeiv8n03SeKbSxM3jZFg9isKH3FRnSAIDlRgk1MA/exec", {
       method: "POST",
       mode: "no-cors",   // ✅ Added for Google Apps Script
       body: JSON.stringify({location, problem, phone}),
