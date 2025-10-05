@@ -14,7 +14,7 @@
 <label>Problem:</label>
 <input type="text" id="problem"><br><br>
 
-<label>Phone Number:</label>
+<label>Phone:</label>
 <input type="text" id="phone"><br><br>
 
 <button id="sendBtn">Send Help Request</button>
@@ -65,6 +65,15 @@ document.getElementById('sendBtn').addEventListener('click',()=>{
     const payload=`HELP:${location}:${problem}:${phone}`;
     client.publish('smartmedical/help',payload);
     alert('Help request sent!');
+
+    // Also send to Google Sheets
+    fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
+      method: "POST",
+      body: JSON.stringify({location, problem, phone}),
+      headers: {"Content-Type": "application/json"}
+    }).then(res=>console.log("Saved to Google Sheets"))
+    .catch(err=>console.error(err));
+
   }else{
     alert('Fill all fields!');
   }
