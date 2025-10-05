@@ -67,7 +67,7 @@ document.getElementById('sendBtn').addEventListener('click',()=>{
     alert('Help request sent!');
 
     // Also send to Google Sheets
-    fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
+    fetch("https://script.google.com/macros/s/AKfycbwFNR4I_SG5mjJDs8vyOaXCnVHe5eDT-epY0oNvGHN66b0I59t9fwLweTYiu9JNIebGxA/exec", {
       method: "POST",
       body: JSON.stringify({location, problem, phone}),
       headers: {"Content-Type": "application/json"}
