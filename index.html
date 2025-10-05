@@ -30,8 +30,8 @@ const responseEl = document.getElementById('response');
 const broker = 'wss://5d50781512bf470b8b7f638f0c140138.s1.eu.hivemq.cloud:8884/mqtt';
 const options = {
   clientId: 'WebClient_' + Math.random().toString(16).substr(2,8),
-  username: 'hivemq.webclient.1759059787763',
-  password: 'De0y4!TzE7t#Z<5Wo>Hq',
+  username: 'hivemq.webclient.1759059787763',   // আপনার HiveMQ username
+  password: 'De0y4!TzE7t#Z<5Wo>Hq',             // আপনার HiveMQ password
   keepalive:60,
   clean:true,
   reconnectPeriod:1000
@@ -41,7 +41,7 @@ const client = mqtt.connect(broker, options);
 
 client.on('connect',()=>{
   statusEl.textContent='Connected';
-  console.log('Connected to broker');
+  console.log('✅ Connected to broker');
   client.subscribe('smartmedical/response');
 });
 
@@ -53,7 +53,7 @@ client.on('message',(topic,message)=>{
 
 client.on('error',(err)=>{
   statusEl.textContent='Error';
-  console.error(err);
+  console.error('❌ MQTT Error:',err);
 });
 
 document.getElementById('sendBtn').addEventListener('click',()=>{
@@ -62,7 +62,7 @@ document.getElementById('sendBtn').addEventListener('click',()=>{
   const phone=document.getElementById('phone').value.trim();
 
   if(location && problem && phone){
-    const payload=HELP:${location}:${problem}:${phone};
+    const payload = `HELP:${location}:${problem}:${phone}`;
     client.publish('smartmedical/help',payload);
     alert('Help request sent!');
   }else{
