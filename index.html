@@ -14,7 +14,7 @@
 <label>Problem:</label>
 <input type="text" id="problem"><br><br>
 
-<label>Phone:</label>
+<label>Phone Number:</label>
 <input type="text" id="phone"><br><br>
 
 <button id="sendBtn">Send Help Request</button>
@@ -27,58 +27,45 @@
 const statusEl = document.getElementById('status');
 const responseEl = document.getElementById('response');
 
-// MQTT Broker setup
 const broker = 'wss://5d50781512bf470b8b7f638f0c140138.s1.eu.hivemq.cloud:8884/mqtt';
 const options = {
   clientId: 'WebClient_' + Math.random().toString(16).substr(2,8),
   username: 'hivemq.webclient.1759059787763',
   password: 'De0y4!TzE7t#Z<5Wo>Hq',
-  keepalive: 60,
-  clean: true,
-  reconnectPeriod: 1000
+  keepalive:60,
+  clean:true,
+  reconnectPeriod:1000
 };
 
 const client = mqtt.connect(broker, options);
 
-client.on('connect', () => {
-  statusEl.textContent = 'Connected';
+client.on('connect',()=>{
+  statusEl.textContent='Connected';
   console.log('Connected to broker');
   client.subscribe('smartmedical/response');
 });
 
-client.on('message', (topic, message) => {
-  if (topic === 'smartmedical/response') {
-    responseEl.textContent = message.toString();
+client.on('message',(topic,message)=>{
+  if(topic==='smartmedical/response'){
+    responseEl.textContent=message.toString();
   }
 });
 
-client.on('error', (err) => {
-  statusEl.textContent = 'Error';
+client.on('error',(err)=>{
+  statusEl.textContent='Error';
   console.error(err);
 });
 
-document.getElementById('sendBtn').addEventListener('click', () => {
-  const location = document.getElementById('location').value.trim();
-  const problem = document.getElementById('problem').value.trim();
-  const phone = document.getElementById('phone').value.trim();
+document.getElementById('sendBtn').addEventListener('click',()=>{
+  const location=document.getElementById('location').value.trim();
+  const problem=document.getElementById('problem').value.trim();
+  const phone=document.getElementById('phone').value.trim();
 
-  if (location && problem && phone) {
-    // Publish to MQTT
-    const payload = `HELP:${location}:${problem}:${phone}`;
-    client.publish('smartmedical/help', payload);
+  if(location && problem && phone){
+    const payload=HELP:${location}:${problem}:${phone};
+    client.publish('smartmedical/help',payload);
     alert('Help request sent!');
-
-    // Save to Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbzJiWpf4pMzu3jsW43T2at3gvSvYIBq3m2fNAGB94fvuOPFLapxAUqfUIOYPBZ6i-C5lQ/exec", {
-      method: "POST",
-      body: JSON.stringify({ location, problem, phone }),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(data => console.log("Response from Google Script:", data))
-    .catch(err => console.error("Fetch error:", err));
-
-  } else {
+  }else{
     alert('Fill all fields!');
   }
 });
