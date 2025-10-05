@@ -69,9 +69,10 @@ document.getElementById('sendBtn').addEventListener('click',()=>{
     // Also send to Google Sheets
     fetch("https://script.google.com/macros/s/AKfycbwFNR4I_SG5mjJDs8vyOaXCnVHe5eDT-epY0oNvGHN66b0I59t9fwLweTYiu9JNIebGxA/exec", {
       method: "POST",
+      mode: "no-cors",   // ✅ Added for Google Apps Script
       body: JSON.stringify({location, problem, phone}),
       headers: {"Content-Type": "application/json"}
-    }).then(res=>console.log("Saved to Google Sheets"))
+    }).then(res=>console.log("Request sent to Google Sheets"))
     .catch(err=>console.error(err));
 
   }else{
